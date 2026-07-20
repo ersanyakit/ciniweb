@@ -65,7 +65,7 @@ export default function PaymentSystem({
 
   // OTP Countdown trigger
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval>;
     if (show3DSecure && countdown > 0) {
       timer = setInterval(() => {
         setCountdown((prev) => prev - 1);

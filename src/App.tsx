@@ -946,7 +946,7 @@ export default function App() {
                 ? "bg-[#091727] text-white border-slate-800" 
                 : "bg-[#003153] text-white border-[#00b4d8]/20"
             }`}>
-              <div className="absolute inset-0 opacity-25">
+              <div className="absolute inset-0 opacity-40">
                 <img
                   src={heroBannerImage}
                   alt="TwoTales Banner"
@@ -954,15 +954,16 @@ export default function App() {
                   className="h-full w-full object-cover"
                 />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#041525]/80 via-[#003153]/75 to-[#041525]/95" />
 
               <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-                <span className="rounded-full bg-[#00b4d8]/20 border border-[#00b4d8]/30 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[#00b4d8] inline-block mb-3 animate-[fade-in_1s]">
+                <span className="inline-block rounded-full border border-cyan-200/40 bg-[#041525]/75 px-3 py-1 text-xs font-bold uppercase tracking-widest text-cyan-100 shadow-lg backdrop-blur-sm mb-3 animate-[fade-in_1s]">
                   Saraydan Günümüze Kadim Sanat
                 </span>
-                <h2 className="font-serif text-3xl font-black tracking-tight text-[#fdfbf7] sm:text-5xl">
-                  Ateşin Sır Altındaki <span className="text-[#00b4d8]">Mavi Şiiri</span>
+                <h2 className="font-serif text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)] sm:text-5xl">
+                  Ateşin Sır Altındaki <span className="text-cyan-300">Mavi Şiiri</span>
                 </h2>
-                <p className="mx-auto mt-4 max-w-2xl text-xs sm:text-sm text-[#00b4d8]/85 leading-relaxed">
+                <p className="mx-auto mt-5 max-w-3xl rounded-2xl border border-white/15 bg-[#041525]/65 px-5 py-3 text-sm font-medium leading-relaxed text-slate-100 shadow-xl backdrop-blur-[2px] sm:px-7 sm:text-base">
                   Geleneksel saray sanatkarlarının ve lüks TwoTales atölyelerinin İznik ve Kütahya fırınlarında pişirdiği, geleneksel lale, karanfil ve rumi motiflerini %100 el işçiliği kuvarshane çamuruyla yarınlara aktarıyoruz.
                 </p>
                 
