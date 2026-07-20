@@ -8,6 +8,7 @@ import OrderTracker from "./components/OrderTracker";
 import PaymentSystem from "./components/PaymentSystem";
 import ProductReviews from "./components/ProductReviews";
 import heroBannerImage from "./assets/images/cini_hero_banner_1783463799205.jpg";
+import logoMark from "./assets/images/logo-mark-gold.png";
 import { 
   Heart, ShoppingCart, Trash2, X, Share2, Eye, ShieldCheck, 
   Sparkles, Instagram, Award, Hourglass, HelpCircle, AlertCircle,
@@ -377,6 +378,7 @@ export default function App() {
   });
 
   const activeFilterCount = [
+    searchQuery.trim().length > 0,
     selectedCategory !== "Tümü",
     selectedOrigin !== "Tümü",
     selectedTechnique !== "Tümü",
@@ -1018,42 +1020,51 @@ export default function App() {
                     aria-controls="catalog-filters"
                     className={`mb-3 flex min-h-12 w-full items-center justify-between rounded-2xl border px-4 py-3 text-left shadow-sm transition lg:hidden ${
                       theme === "gece"
-                        ? "border-sini-turquoise/25 bg-[#0b1d30] text-slate-100"
-                        : "border-sini-navy/15 bg-white text-sini-navy"
+                        ? "border-sini-gold/25 bg-[#0b1d30] text-slate-100"
+                        : "border-sini-gold/30 bg-[#fffdf8] text-sini-navy"
                     }`}
                   >
                     <span className="flex items-center gap-2 text-sm font-black">
-                      <Filter className="h-4 w-4 text-sini-turquoise" />
+                      <Filter className="h-4 w-4 text-sini-gold" />
                       Filtreler
                       {activeFilterCount > 0 && (
-                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sini-turquoise px-1.5 text-[10px] font-black text-sini-navy">
+                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sini-gold px-1.5 text-[10px] font-black text-sini-navy">
                           {activeFilterCount}
                         </span>
                       )}
                     </span>
-                    <ChevronDown className={`h-4 w-4 text-sini-turquoise transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`h-4 w-4 text-sini-gold transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
                   </button>
 
-                  <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} lg:block`}>
-                  <div className={`relative rounded-2xl border p-4 shadow-sm transition-all duration-300 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain xl:p-5 ${
+                  <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} lg:sticky lg:top-24 lg:block lg:self-start`}>
+                  <div className={`relative rounded-[28px] border p-4 shadow-xl transition-all duration-300 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain xl:p-5 ${
                     theme === "gece"
-                      ? "border-slate-700/70 bg-[#0b1d30] shadow-slate-950/30"
-                      : "border-sini-navy/15 bg-white shadow-stone-200/40"
+                      ? "border-sini-gold/20 bg-gradient-to-b from-[#0c2238] to-[#071725] shadow-slate-950/35"
+                      : "border-sini-gold/30 bg-[#fffdf8] shadow-stone-300/35"
                   }`}>
+                    <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-sini-gold/80 to-transparent" />
 
                     {/* Sidebar Header */}
-                    <div className={`mb-5 flex items-center justify-between gap-3 border-b pb-4 ${theme === "gece" ? "border-sini-turquoise/15" : "border-sini-navy/10"}`}>
-                      <div>
-                        <span className={`text-[10px] font-bold uppercase tracking-[0.18em] ${theme === "gece" ? "text-cyan-300" : "text-cyan-700"}`}>TwoTales Atölyesi</span>
-                        <h4 className={`mt-1 flex items-center gap-2 font-serif text-base font-black ${theme === "gece" ? "text-slate-100" : "text-sini-navy"}`}>
-                          <Filter className="h-4 w-4 text-sini-turquoise" />
-                          Koleksiyonu Filtrele
-                        </h4>
+                    <div className={`mb-5 flex items-center justify-between gap-3 border-b pb-5 ${theme === "gece" ? "border-white/8" : "border-sini-navy/8"}`}>
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${
+                          theme === "gece"
+                            ? "border-sini-gold/25 bg-sini-gold/10"
+                            : "border-sini-gold/30 bg-sini-gold/10"
+                        }`}>
+                          <SlidersHorizontal className="h-4.5 w-4.5 text-sini-gold" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className={`text-[9px] font-bold uppercase tracking-[0.22em] ${theme === "gece" ? "text-sini-gold/80" : "text-amber-700"}`}>Kürasyon</span>
+                          <h4 className={`truncate font-serif text-base font-black ${theme === "gece" ? "text-white" : "text-sini-navy"}`}>
+                            Eser Seçimi
+                          </h4>
+                        </div>
                       </div>
-                      <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-black ${
+                      <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black ${
                         theme === "gece"
-                          ? "border-sini-turquoise/20 bg-sini-turquoise/10 text-cyan-200"
-                          : "border-sini-navy/10 bg-sini-navy/5 text-sini-navy"
+                          ? "bg-white/7 text-slate-200"
+                          : "bg-sini-navy/7 text-sini-navy"
                       }`}>
                         {filteredProducts.length} eser
                       </span>
@@ -1102,7 +1113,7 @@ export default function App() {
                         </label>
                       </div>
                       <div className="text-[11px] font-bold mb-2.5 flex justify-between items-center">
-                        <span className="font-serif italic text-stone-400 text-[10px]">Tavan Değer:</span>
+                        <span className={`font-serif text-[11px] font-semibold ${theme === "gece" ? "text-slate-300" : "text-stone-600"}`}>Tavan Değer:</span>
                         <span className={`px-2 py-0.5 rounded-md font-mono text-xs font-black border ${
                           theme === "gece" 
                             ? "text-sini-turquoise bg-[#091727] border-sini-turquoise/20" 
@@ -1124,7 +1135,7 @@ export default function App() {
                           theme === "gece" ? "accent-sini-turquoise bg-slate-900 border-sini-turquoise/15" : "accent-[#003153] bg-sini-navy/10 border-sini-navy/10"
                         }`}
                       />
-                      <div className="flex justify-between text-[9px] text-stone-400 font-bold font-mono mt-1.5">
+                      <div className={`mt-1.5 flex justify-between font-mono text-[10px] font-bold ${theme === "gece" ? "text-slate-400" : "text-stone-500"}`}>
                         <span>₺400</span>
                         <span>₺4,000</span>
                       </div>
@@ -1170,7 +1181,7 @@ export default function App() {
                               </div>
                               <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                                 isSelected 
-                                  ? "bg-[#00223a] text-sini-turquoise border border-sini-turquoise/25" 
+                                  ? "bg-[#00223a] text-sini-turquoise border-sini-turquoise/25"
                                   : theme === "gece"
                                     ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
                                     : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
@@ -1223,7 +1234,7 @@ export default function App() {
                               </div>
                               <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                                 isSelected 
-                                  ? "bg-[#00223a] text-sini-turquoise border border-sini-turquoise/25" 
+                                  ? "bg-[#00223a] text-sini-turquoise border-sini-turquoise/25"
                                   : theme === "gece"
                                     ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
                                     : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
@@ -1276,7 +1287,7 @@ export default function App() {
                               </div>
                               <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                                 isSelected 
-                                  ? "bg-[#00223a] text-sini-turquoise border border-sini-turquoise/25" 
+                                  ? "bg-[#00223a] text-sini-turquoise border-sini-turquoise/25"
                                   : theme === "gece"
                                     ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
                                     : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
@@ -1633,10 +1644,27 @@ export default function App() {
           
           {/* Logo & Slogan */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#00b4d8] text-sm font-bold text-[#003153]">T</div>
-              <span className="font-serif text-lg font-bold text-white">TwoTales</span>
-            </div>
+            <button
+              type="button"
+              onClick={handleNavigateToCatalog}
+              aria-label="TwoTales ana sayfasına git"
+              className="group inline-flex items-center gap-3 text-left"
+            >
+              <span className="logo-jewel relative flex h-12 w-13 items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                <img
+                  src={logoMark}
+                  alt=""
+                  className="logo-jewel__mark h-full w-full object-contain"
+                />
+                <span aria-hidden="true" className="logo-jewel__sparkle logo-jewel__sparkle--one" />
+                <span aria-hidden="true" className="logo-jewel__sparkle logo-jewel__sparkle--two" />
+                <span aria-hidden="true" className="logo-jewel__sparkle logo-jewel__sparkle--three" />
+              </span>
+              <span>
+                <span className="block font-serif text-xl font-black leading-none text-white">TwoTales</span>
+                <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.24em] text-sini-gold">Art Studio</span>
+              </span>
+            </button>
             <p className="text-xs leading-relaxed text-slate-300/90">
               Kadim Türk çini sanatını en saf fırça darbeleri ve doğal sırlar eşliğinde fırınlayarak, evinizin en lüks köşelerine taşıyoruz.
             </p>

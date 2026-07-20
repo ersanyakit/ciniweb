@@ -40,3 +40,124 @@ textarea:focus-visible {
   outline: 2px solid var(--color-sini-turquoise) !important;
   outline-offset: 2px !important;
 }
+
+@keyframes logo-gold-depth {
+  0%,
+  100% {
+    filter: brightness(0.97) saturate(1.03)
+      drop-shadow(0 1px 0 rgb(76 40 8 / 0.9))
+      drop-shadow(0 3px 5px rgb(0 0 0 / 0.34));
+  }
+  50% {
+    filter: brightness(1.025) saturate(1.06)
+      drop-shadow(0 1px 0 rgb(90 48 10 / 0.92))
+      drop-shadow(0 3px 7px rgb(207 161 92 / 0.2));
+  }
+}
+
+@keyframes jewel-flare {
+  0%,
+  67%,
+  78%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15) rotate(-18deg);
+  }
+  69% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) scale(0.72) rotate(-6deg);
+  }
+  71% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  74% {
+    opacity: 0.72;
+    transform: translate(-50%, -50%) scale(0.58) rotate(10deg);
+  }
+  76% {
+    opacity: 0.94;
+    transform: translate(-50%, -50%) scale(0.78) rotate(16deg);
+  }
+}
+
+.logo-jewel__mark {
+  animation: logo-gold-depth 6.8s ease-in-out infinite;
+  will-change: filter;
+}
+
+.logo-jewel__sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: #fff8dc;
+  box-shadow:
+    0 0 3px rgb(255 252 230 / 0.95),
+    0 0 8px rgb(255 205 101 / 0.8),
+    0 0 15px rgb(207 161 92 / 0.42);
+  opacity: 0;
+  animation: jewel-flare 7.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  will-change: opacity, transform;
+}
+
+.logo-jewel__sparkle::before,
+.logo-jewel__sparkle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(255 246 205 / 0.95),
+    transparent
+  );
+  transform: translate(-50%, -50%);
+}
+
+.logo-jewel__sparkle::before {
+  width: 1px;
+  height: 13px;
+}
+
+.logo-jewel__sparkle::after {
+  width: 11px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgb(255 246 205 / 0.92),
+    transparent
+  );
+}
+
+.logo-jewel__sparkle--one {
+  top: 20%;
+  left: 18%;
+  animation-delay: -1.1s;
+}
+
+.logo-jewel__sparkle--two {
+  top: 23%;
+  left: 81%;
+  animation-delay: -3.6s;
+}
+
+.logo-jewel__sparkle--three {
+  top: 49%;
+  left: 50%;
+  animation-delay: -5.9s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-jewel__mark {
+    animation: none;
+  }
+
+  .logo-jewel__sparkle {
+    display: none;
+  }
+}

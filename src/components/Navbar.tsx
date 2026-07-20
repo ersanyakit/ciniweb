@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search, ShoppingCart, Heart, User, ClipboardList, Menu, X, LogOut, Sun, Moon } from "lucide-react";
 import { User as UserType } from "../types";
 import { motion } from "motion/react";
-import logoMark from "../assets/images/logo-mark.png";
+import logoMark from "../assets/images/logo-mark-gold.png";
 
 interface NavbarProps {
   activeTab: string;
@@ -78,16 +78,19 @@ export default function Navbar({
           onClick={() => handleTabClick("catalog")} 
           className="group flex shrink-0 cursor-pointer items-center gap-2 text-left"
         >
-          <div className="flex h-10 w-11 shrink-0 items-center justify-center sm:h-11 sm:w-12">
+          <div className="logo-jewel relative flex h-10 w-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105 sm:h-11 sm:w-12">
             <img
               src={logoMark}
               alt=""
-              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+              className="logo-jewel__mark h-full w-full object-contain"
             />
+            <span aria-hidden="true" className="logo-jewel__sparkle logo-jewel__sparkle--one" />
+            <span aria-hidden="true" className="logo-jewel__sparkle logo-jewel__sparkle--two" />
+            <span aria-hidden="true" className="logo-jewel__sparkle logo-jewel__sparkle--three" />
           </div>
           <div className="hidden sm:block">
             <h1 className="font-serif text-lg font-black tracking-tight text-sini-cream sm:text-xl flex items-center gap-0.5">
-              <span className="text-sini-turquoise font-sans font-black">Two</span>
+              <span className="text-sini-gold font-sans font-black">Two</span>
               <span className="text-white italic">Tales</span>
             </h1>
             <p className="hidden text-[8.5px] uppercase tracking-widest text-sini-turquoise/90 font-mono font-bold lg:block">
