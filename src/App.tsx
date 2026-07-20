@@ -7,6 +7,7 @@ import AuthPortal from "./components/AuthPortal";
 import OrderTracker from "./components/OrderTracker";
 import PaymentSystem from "./components/PaymentSystem";
 import ProductReviews from "./components/ProductReviews";
+import heroBannerImage from "./assets/images/cini_hero_banner_1783463799205.jpg";
 import { 
   Heart, ShoppingCart, Trash2, X, Share2, Eye, ShieldCheck, 
   Sparkles, Instagram, Award, Hourglass, HelpCircle, AlertCircle,
@@ -82,6 +83,23 @@ const SEED_REVIEWS: Review[] = [
   }
 ];
 
+const CURRENT_PRODUCT_IMAGES = new Map(
+  PRODUCTS.map((product) => [product.id, product.image])
+);
+
+const refreshProductImage = (product: Product): Product => ({
+  ...product,
+  image: CURRENT_PRODUCT_IMAGES.get(product.id) ?? product.image,
+});
+
+const refreshOrderImages = (order: Order): Order => ({
+  ...order,
+  items: order.items.map((item) => ({
+    ...item,
+    product: refreshProductImage(item.product),
+  })),
+});
+
 export default function App() {
   const [theme, setTheme] = useState<"gunduz" | "gece">(() => {
     const saved = localStorage.getItem("twotales-theme");
@@ -149,14 +167,23 @@ export default function App() {
   // Initialize and Sync localStorage on Boot
   useEffect(() => {
     const savedCart = localStorage.getItem("cini_cart");
-    if (savedCart) setCart(JSON.parse(savedCart));
+    if (savedCart) {
+      const refreshedCart = (JSON.parse(savedCart) as CartItem[]).map((item) => ({
+        ...item,
+        product: refreshProductImage(item.product),
+      }));
+      setCart(refreshedCart);
+      localStorage.setItem("cini_cart", JSON.stringify(refreshedCart));
+    }
 
     const savedFavorites = localStorage.getItem("cini_favorites");
     if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
 
     const savedOrders = localStorage.getItem("cini_orders");
     if (savedOrders) {
-      setOrders(JSON.parse(savedOrders));
+      const refreshedOrders = (JSON.parse(savedOrders) as Order[]).map(refreshOrderImages);
+      setOrders(refreshedOrders);
+      localStorage.setItem("cini_orders", JSON.stringify(refreshedOrders));
     } else {
       setOrders(INITIAL_ORDERS);
       localStorage.setItem("cini_orders", JSON.stringify(INITIAL_ORDERS));
@@ -167,7 +194,9 @@ export default function App() {
 
     const savedProducts = localStorage.getItem("cini_products");
     if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
+      const refreshedProducts = (JSON.parse(savedProducts) as Product[]).map(refreshProductImage);
+      setProducts(refreshedProducts);
+      localStorage.setItem("cini_products", JSON.stringify(refreshedProducts));
     } else {
       setProducts(PRODUCTS);
       localStorage.setItem("cini_products", JSON.stringify(PRODUCTS));
@@ -919,7 +948,7 @@ export default function App() {
             }`}>
               <div className="absolute inset-0 opacity-25">
                 <img
-                  src="/src/assets/images/cini_hero_banner_1783463799205.jpg"
+                  src={heroBannerImage}
                   alt="TwoTales Banner"
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover"

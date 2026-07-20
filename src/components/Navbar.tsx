@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Search, ShoppingCart, Heart, User, Sparkles, ClipboardList, Menu, X, LogOut, Sun, Moon } from "lucide-react";
+import { Search, ShoppingCart, Heart, User, ClipboardList, Menu, X, LogOut, Sun, Moon } from "lucide-react";
 import { User as UserType } from "../types";
 import { motion } from "motion/react";
+import logoMark from "../assets/images/logo-mark.png";
 
 interface NavbarProps {
   activeTab: string;
@@ -71,28 +72,29 @@ export default function Navbar({
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <div 
+        <button
+          type="button"
+          aria-label="TwoTales ana sayfasına git"
           onClick={() => handleTabClick("catalog")} 
-          className="flex cursor-pointer items-center space-x-2.5 group"
+          className="group flex shrink-0 cursor-pointer items-center gap-2 text-left"
         >
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-stone-900 to-sini-turquoise shadow-md border border-sini-turquoise/40">
-            {theme === "gece" ? (
-              <Moon className="h-4.5 w-4.5 text-indigo-200 animate-pulse" />
-            ) : (
-              <Sun className="h-5 w-5 text-amber-300 animate-[spin_60s_linear_infinite]" />
-            )}
-            <div className="absolute inset-0 rounded-full border-2 border-dashed border-sini-turquoise/30 animate-[spin_40s_linear_infinite]" />
+          <div className="flex h-10 w-11 shrink-0 items-center justify-center sm:h-11 sm:w-12">
+            <img
+              src={logoMark}
+              alt=""
+              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
-          <div>
+          <div className="hidden sm:block">
             <h1 className="font-serif text-lg font-black tracking-tight text-sini-cream sm:text-xl flex items-center gap-0.5">
               <span className="text-sini-turquoise font-sans font-black">Two</span>
               <span className="text-white italic">Tales</span>
             </h1>
-            <p className="hidden text-[8.5px] uppercase tracking-widest text-sini-turquoise/90 font-mono font-bold sm:block">
+            <p className="hidden text-[8.5px] uppercase tracking-widest text-sini-turquoise/90 font-mono font-bold lg:block">
               {theme === "gece" ? "Gece Masalları • Sır Altı" : "Gündüz Hikayeleri • Sır & Ateş"}
             </p>
           </div>
-        </div>
+        </button>
 
         {/* Search Bar (Desktop) */}
         <div className="hidden max-w-md flex-1 px-8 md:block">

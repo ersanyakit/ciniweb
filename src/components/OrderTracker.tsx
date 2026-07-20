@@ -72,12 +72,12 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
     return (
       <div className={`rounded-2xl border p-6 shadow-md mt-6 ${
         theme === "gece"
-          ? "bg-[#112946] border-slate-800 text-white"
-          : "bg-white border-stone-200 text-stone-800"
+          ? "bg-[#112946] border-sini-turquoise/20 text-white"
+          : "bg-white/85 border-sini-navy/15 text-stone-800"
       }`}>
         {/* Order Header */}
         <div className={`flex flex-col md:flex-row md:items-center md:justify-between border-b pb-4 gap-2 ${
-          theme === "gece" ? "border-slate-800" : "border-stone-100"
+          theme === "gece" ? "border-sini-turquoise/15" : "border-sini-navy/10"
         }`}>
           <div>
             <span className={`text-[10px] font-bold uppercase tracking-wider ${theme === "gece" ? "text-slate-400" : "text-stone-400"}`}>Takip Numarası</span>
@@ -106,7 +106,7 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
           {/* Progress Timeline */}
           <div className="relative">
             {/* Background Line */}
-            <div className={`absolute top-0 bottom-0 left-4 w-0.5 md:left-1/2 md:-ml-0.25 ${theme === "gece" ? "bg-slate-800" : "bg-stone-100"}`} />
+            <div className={`absolute top-0 bottom-0 left-4 w-0.5 md:left-1/2 md:-ml-0.25 ${theme === "gece" ? "bg-sini-turquoise/15" : "bg-sini-navy/10"}`} />
 
             <div className="space-y-8">
               {order.timeline.map((event, idx) => (
@@ -119,8 +119,8 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
                           ? "bg-sini-turquoise border-sini-turquoise text-[#003153]"
                           : "bg-sini-navy border-sini-navy text-sini-turquoise"
                         : theme === "gece"
-                          ? "bg-slate-900 border-slate-750 text-slate-500"
-                          : "bg-white border-stone-200 text-stone-400"
+                          ? "bg-slate-900 border-sini-turquoise/20 text-slate-500"
+                          : "bg-sini-cream border-sini-navy/20 text-stone-400"
                     }`}
                   >
                     <span className="text-[10px] font-bold">{idx + 1}</span>
@@ -201,7 +201,7 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
 
         {/* Order Details & Delivery Summary */}
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-5 mt-6 ${
-          theme === "gece" ? "border-slate-800" : "border-stone-100"
+          theme === "gece" ? "border-sini-turquoise/15" : "border-sini-navy/10"
         }`}>
           {/* Shipping Address */}
           <div>
@@ -241,7 +241,7 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
                 </div>
               ))}
               <div className={`border-t border-dashed pt-2 flex justify-between items-center text-xs ${
-                theme === "gece" ? "border-slate-800" : "border-stone-200"
+                theme === "gece" ? "border-sini-turquoise/15" : "border-sini-navy/10"
               }`}>
                 <span className={`font-bold ${theme === "gece" ? "text-slate-300" : "text-sini-navy"}`}>Toplam Tutar (KDV Dahil):</span>
                 <span className={`font-extrabold text-base ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>
@@ -305,19 +305,19 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
                 <motion.div
                    key={order.id}
                    onClick={() => setSearchedOrder(order)}
-                   whileHover={{ scale: 1.015, borderColor: "var(--color-sini-turquoise)" }}
+                   whileHover={{ scale: 1.015 }}
                    whileTap={{ scale: 0.985 }}
                    className={`rounded-xl border p-4 shadow-sm cursor-pointer transition-all flex flex-col md:flex-row md:items-center md:justify-between gap-3 ${
                      theme === "gece"
-                       ? "border-slate-800 bg-[#112946] text-white hover:border-sini-turquoise/50"
-                       : "border-stone-200 bg-white text-stone-800 hover:border-sini-navy/50"
+                       ? "border-sini-turquoise/20 bg-[#112946] text-white hover:border-sini-turquoise/60"
+                       : "border-sini-navy/15 bg-white/80 text-stone-800 hover:border-sini-turquoise/60"
                    }`}
                 >
                   <div className="flex items-center space-x-3.5">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-lg border ${
                       theme === "gece"
-                        ? "bg-slate-900 border-slate-800 text-sini-turquoise"
-                        : "bg-stone-50 border-stone-100 text-sini-navy"
+                        ? "bg-[#091727] border-sini-turquoise/15 text-sini-turquoise"
+                        : "bg-sini-navy/5 border-sini-navy/10 text-sini-navy"
                     }`}>
                       <ClipboardCheck className="h-5 w-5" />
                     </div>
