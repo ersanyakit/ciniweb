@@ -64,10 +64,3 @@ export interface Review {
   comment: string;
   date: string;
 }
-
-export interface ChatMessage {
-  id: string;
-  role: "user" | "model";
-  text: string;
-  timestamp: string;
-}
