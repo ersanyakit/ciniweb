@@ -1036,8 +1036,8 @@ export default function App() {
                     <ChevronDown className={`h-4 w-4 text-sini-gold transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
                   </button>
 
-                  <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} lg:sticky lg:top-24 lg:block lg:self-start`}>
-                  <div className={`relative overflow-hidden rounded-[28px] p-4 transition-all duration-300 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain xl:p-5 ${
+                  <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} lg:block lg:self-start`}>
+                  <div className={`relative overflow-hidden rounded-[28px] p-4 transition-all duration-300 xl:p-5 ${
                     theme === "gece"
                       ? "bg-gradient-to-b from-[#0d263f] via-[#0a2035] to-[#071725] shadow-[0_22px_60px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.05)]"
                       : "bg-[#fffdf8] shadow-[0_22px_60px_rgba(13,35,58,0.12),inset_0_1px_0_rgba(255,255,255,0.9)]"
