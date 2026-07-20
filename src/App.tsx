@@ -1018,10 +1018,10 @@ export default function App() {
                     onClick={() => setFiltersOpen((open) => !open)}
                     aria-expanded={filtersOpen}
                     aria-controls="catalog-filters"
-                    className={`mb-3 flex min-h-12 w-full items-center justify-between rounded-2xl border px-4 py-3 text-left shadow-sm transition lg:hidden ${
+                    className={`mb-3 flex min-h-12 w-full items-center justify-between rounded-2xl px-4 py-3 text-left transition lg:hidden ${
                       theme === "gece"
-                        ? "border-sini-gold/25 bg-[#0b1d30] text-slate-100"
-                        : "border-sini-gold/30 bg-[#fffdf8] text-sini-navy"
+                        ? "bg-[#0b1d30] text-slate-100 shadow-[0_12px_30px_rgba(0,0,0,0.24)]"
+                        : "bg-[#fffdf8] text-sini-navy shadow-[0_12px_30px_rgba(13,35,58,0.10)]"
                     }`}
                   >
                     <span className="flex items-center gap-2 text-sm font-black">
@@ -1037,20 +1037,20 @@ export default function App() {
                   </button>
 
                   <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} lg:sticky lg:top-24 lg:block lg:self-start`}>
-                  <div className={`relative rounded-[28px] border p-4 shadow-xl transition-all duration-300 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain xl:p-5 ${
+                  <div className={`relative overflow-hidden rounded-[28px] p-4 transition-all duration-300 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain xl:p-5 ${
                     theme === "gece"
-                      ? "border-sini-gold/20 bg-gradient-to-b from-[#0c2238] to-[#071725] shadow-slate-950/35"
-                      : "border-sini-gold/30 bg-[#fffdf8] shadow-stone-300/35"
+                      ? "bg-gradient-to-b from-[#0d263f] via-[#0a2035] to-[#071725] shadow-[0_22px_60px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.05)]"
+                      : "bg-[#fffdf8] shadow-[0_22px_60px_rgba(13,35,58,0.12),inset_0_1px_0_rgba(255,255,255,0.9)]"
                   }`}>
-                    <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-sini-gold/80 to-transparent" />
+                    <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-sini-gold/10 blur-3xl" />
 
                     {/* Sidebar Header */}
-                    <div className={`mb-5 flex items-center justify-between gap-3 border-b pb-5 ${theme === "gece" ? "border-white/8" : "border-sini-navy/8"}`}>
+                    <div className="relative mb-5 flex items-center justify-between gap-3 pb-5">
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
                           theme === "gece"
-                            ? "border-sini-gold/25 bg-sini-gold/10"
-                            : "border-sini-gold/30 bg-sini-gold/10"
+                            ? "bg-sini-gold/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                            : "bg-sini-gold/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
                         }`}>
                           <SlidersHorizontal className="h-4.5 w-4.5 text-sini-gold" />
                         </div>
@@ -1061,130 +1061,143 @@ export default function App() {
                           </h4>
                         </div>
                       </div>
-                      <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black ${
+                      <span className={`shrink-0 text-[10px] font-bold tabular-nums ${
                         theme === "gece"
-                          ? "bg-white/7 text-slate-200"
-                          : "bg-sini-navy/7 text-sini-navy"
+                          ? "text-slate-300"
+                          : "text-sini-navy/65"
                       }`}>
                         {filteredProducts.length} eser
                       </span>
+                      <div className={`absolute inset-x-0 bottom-0 h-px bg-gradient-to-r ${
+                        theme === "gece"
+                          ? "from-sini-gold/45 via-white/8 to-transparent"
+                          : "from-sini-gold/45 via-sini-navy/8 to-transparent"
+                      }`} />
                     </div>
 
-                    {/* In-Stock Only Boutique Toggler */}
-                    <div className={`mb-5 flex min-h-12 items-center justify-between rounded-xl border p-3 transition-colors duration-300 ${
-                      theme === "gece" ? "bg-[#112946] border-sini-turquoise/15" : "bg-sini-navy/[0.03] border-sini-navy/10"
+                    {/* Compact collection controls */}
+                    <div className={`mb-6 rounded-2xl px-4 ${
+                      theme === "gece"
+                        ? "bg-black/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                        : "bg-sini-navy/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]"
                     }`}>
-                      <div className="flex items-center gap-1.5">
-                        <Sparkles className="h-3.5 w-3.5 text-sini-turquoise" />
-                        <span className={`text-[10.5px] font-black uppercase tracking-wider ${
-                          theme === "gece" ? "text-slate-200" : "text-[#003153]"
-                        }`}>Yalnızca Stoktakiler</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setOnlyInStock(!onlyInStock)}
-                        role="switch"
-                        aria-checked={onlyInStock}
-                        aria-label="Yalnızca stokta bulunan eserleri göster"
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                          onlyInStock
-                            ? "bg-sini-turquoise"
-                            : theme === "gece" ? "bg-slate-600" : "bg-stone-300"
-                        }`}
-                      >
-                        <span
-                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                            onlyInStock ? "translate-x-5" : "translate-x-0"
+                      <div className="relative flex min-h-14 items-center justify-between py-3">
+                        <div className="flex items-center gap-2.5">
+                          <Sparkles className="h-3.5 w-3.5 text-sini-gold" />
+                          <span className={`text-[11px] font-bold tracking-wide ${
+                            theme === "gece" ? "text-slate-200" : "text-sini-navy"
+                          }`}>Yalnızca stoktakiler</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setOnlyInStock(!onlyInStock)}
+                          role="switch"
+                          aria-checked={onlyInStock}
+                          aria-label="Yalnızca stokta bulunan eserleri göster"
+                          className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full p-1 transition-colors duration-300 ${
+                            onlyInStock
+                              ? "bg-sini-gold shadow-[0_0_18px_rgba(207,161,92,0.22)]"
+                              : theme === "gece" ? "bg-white/12" : "bg-sini-navy/12"
                           }`}
-                        />
-                      </button>
-                    </div>
+                        >
+                          <span
+                            className={`pointer-events-none block h-5 w-5 rounded-full bg-white shadow-[0_2px_7px_rgba(0,0,0,0.25)] transition-transform duration-300 ${
+                              onlyInStock ? "translate-x-5" : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                        <div className={`absolute inset-x-0 bottom-0 h-px bg-gradient-to-r ${
+                          theme === "gece"
+                            ? "from-transparent via-white/8 to-transparent"
+                            : "from-transparent via-sini-navy/10 to-transparent"
+                        }`} />
+                      </div>
 
-                    {/* Price Range with Elegant Serif Numbers */}
-                    <div className={`mb-5 rounded-xl border p-3.5 transition-colors duration-300 ${
-                      theme === "gece" ? "bg-[#112946] border-sini-turquoise/15" : "bg-sini-navy/[0.03] border-sini-navy/10"
-                    }`}>
-                      <div className="flex items-center gap-1.5 mb-2">
-                        <SlidersHorizontal className={`h-3.5 w-3.5 ${theme === "gece" ? "text-sini-turquoise" : "text-[#003153]/70"}`} />
-                        <label htmlFor="catalog-max-price" className={`block text-[11px] font-black uppercase tracking-wider ${
-                          theme === "gece" ? "text-slate-200" : "text-[#003153]"
-                        }`}>
-                          Azami Fiyat
-                        </label>
-                      </div>
-                      <div className="text-[11px] font-bold mb-2.5 flex justify-between items-center">
-                        <span className={`font-serif text-[11px] font-semibold ${theme === "gece" ? "text-slate-300" : "text-stone-600"}`}>Tavan Değer:</span>
-                        <span className={`px-2 py-0.5 rounded-md font-mono text-xs font-black border ${
-                          theme === "gece" 
-                            ? "text-sini-turquoise bg-[#091727] border-sini-turquoise/20" 
-                            : "text-[#003153] bg-sini-cream/50 border-sini-navy/10"
-                        }`}>
-                          ₺{maxPrice.toLocaleString("tr-TR")}
-                        </span>
-                      </div>
-                      <input
-                        id="catalog-max-price"
-                        type="range"
-                        min={400}
-                        max={4000}
-                        step={100}
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(Number(e.target.value))}
-                        aria-valuetext={`Azami ${maxPrice.toLocaleString("tr-TR")} Türk lirası`}
-                        className={`w-full cursor-pointer h-1.5 rounded-lg appearance-none border ${
-                          theme === "gece" ? "accent-sini-turquoise bg-slate-900 border-sini-turquoise/15" : "accent-[#003153] bg-sini-navy/10 border-sini-navy/10"
-                        }`}
-                      />
-                      <div className={`mt-1.5 flex justify-between font-mono text-[10px] font-bold ${theme === "gece" ? "text-slate-400" : "text-stone-500"}`}>
-                        <span>₺400</span>
-                        <span>₺4,000</span>
+                      <div className="py-4">
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                          <label htmlFor="catalog-max-price" className={`flex items-center gap-2 text-[11px] font-bold tracking-wide ${
+                            theme === "gece" ? "text-slate-200" : "text-sini-navy"
+                          }`}>
+                            <SlidersHorizontal className="h-3.5 w-3.5 text-sini-gold" />
+                            Azami fiyat
+                          </label>
+                          <span className={`font-mono text-xs font-black tabular-nums ${
+                            theme === "gece" ? "text-amber-100" : "text-amber-800"
+                          }`}>
+                            ₺{maxPrice.toLocaleString("tr-TR")}
+                          </span>
+                        </div>
+                        <input
+                          id="catalog-max-price"
+                          type="range"
+                          min={400}
+                          max={4000}
+                          step={100}
+                          value={maxPrice}
+                          onChange={(e) => setMaxPrice(Number(e.target.value))}
+                          aria-valuetext={`Azami ${maxPrice.toLocaleString("tr-TR")} Türk lirası`}
+                          className="catalog-price-range h-1.5 w-full cursor-pointer appearance-none rounded-full"
+                          style={{
+                            background: `linear-gradient(to right, #cfa15c 0%, #cfa15c ${((maxPrice - 400) / 3600) * 100}%, ${theme === "gece" ? "rgba(255,255,255,0.10)" : "rgba(13,35,58,0.12)"} ${((maxPrice - 400) / 3600) * 100}%, ${theme === "gece" ? "rgba(255,255,255,0.10)" : "rgba(13,35,58,0.12)"} 100%)`,
+                          }}
+                        />
+                        <div className={`mt-2 flex justify-between font-mono text-[9px] font-semibold tabular-nums ${theme === "gece" ? "text-slate-500" : "text-stone-500"}`}>
+                          <span>₺400</span>
+                          <span>₺4.000</span>
+                        </div>
                       </div>
                     </div>
 
                     {/* Category Selection with Dynamic Match Counters */}
-                    <div className="mb-5">
-                      <div className="flex items-center gap-1.5 mb-2">
-                        <Layers className={`h-3.5 w-3.5 ${theme === "gece" ? "text-sini-turquoise" : "text-[#003153]/70"}`} />
-                        <label className={`block text-[10.5px] font-black uppercase tracking-wider ${
-                          theme === "gece" ? "text-slate-200" : "text-[#003153]"
+                    <div className="mb-6">
+                      <div className="mb-2.5 flex items-center gap-2 px-1">
+                        <Layers className="h-3.5 w-3.5 text-sini-gold" />
+                        <h5 className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                          theme === "gece" ? "text-slate-300" : "text-sini-navy/70"
                         }`}>
                           Çini Kategorisi
-                        </label>
+                        </h5>
                       </div>
-                      <div className="flex flex-col gap-1.5">
+                      <div className="flex flex-col gap-1">
                         {["Tümü", "Tabak", "Vazo", "Karo", "Kase"].map((cat) => {
-                          const isSelected = selectedCategory === cat;
+                          const isSelected = cat !== "Tümü" && selectedCategory === cat;
                           const matchCount = getCategoryCount(cat);
                           return (
                             <motion.button
                               key={cat}
                               type="button"
                               aria-pressed={isSelected}
-                              onClick={() => setSelectedCategory(cat)}
-                              whileHover={{ x: 3 }}
+                              onClick={() => setSelectedCategory(isSelected ? "Tümü" : cat)}
+                              whileHover={{ scale: 1.01 }}
                               whileTap={{ scale: 0.98 }}
-                              className={`w-full text-left rounded-xl px-3.5 py-2.5 text-xs transition-all cursor-pointer flex items-center justify-between border ${
+                              className={`group flex min-h-10 w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-all ${
                                 isSelected
                                   ? theme === "gece"
-                                    ? "bg-sini-turquoise/15 text-cyan-100 border-sini-turquoise/50 shadow-sm font-bold pl-4 border-l-4"
-                                    : "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
+                                    ? "bg-sini-gold/[0.13] text-amber-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                                    : "bg-sini-navy text-white shadow-[0_7px_18px_rgba(13,35,58,0.16)]"
                                   : theme === "gece"
-                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-sini-turquoise/15"
-                                    : "bg-sini-navy/[0.02] text-stone-700 hover:bg-sini-navy/5 hover:text-sini-navy border-sini-navy/10"
+                                    ? "text-slate-300 hover:bg-white/[0.055] hover:text-white"
+                                    : "text-stone-600 hover:bg-sini-navy/[0.045] hover:text-sini-navy"
                               }`}
                             >
-                              <div className="flex items-center gap-2">
-                                {isSelected && <span className="text-sini-turquoise font-extrabold text-[10px]">✦</span>}
-                                <span className={isSelected ? "font-black uppercase tracking-wide text-[10.5px]" : "font-semibold"}>
+                              <div className="flex items-center gap-2.5">
+                                <span className={`h-1.5 w-1.5 rounded-full transition-all ${
+                                  isSelected
+                                    ? "bg-sini-gold shadow-[0_0_8px_rgba(207,161,92,0.75)]"
+                                    : "bg-transparent"
+                                }`} />
+                                <span className={isSelected ? "font-bold" : "font-medium"}>
                                   {cat === "Tümü" ? "Tüm Kategoriler" : cat}
                                 </span>
                               </div>
-                              <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
-                                isSelected 
-                                  ? "bg-[#00223a] text-sini-turquoise border-sini-turquoise/25"
+                              <span className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tabular-nums ${
+                                isSelected
+                                  ? theme === "gece"
+                                    ? "bg-sini-gold/12 text-amber-200"
+                                    : "bg-white/10 text-amber-100"
                                   : theme === "gece"
-                                    ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
-                                    : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
+                                    ? "bg-black/15 text-slate-400"
+                                    : "bg-sini-navy/5 text-stone-500"
                               }`}>
                                 {matchCount}
                               </span>
@@ -1195,49 +1208,55 @@ export default function App() {
                     </div>
 
                     {/* Origin Selection with Dynamic Match Counters */}
-                    <div className="mb-5">
-                      <div className="flex items-center gap-1.5 mb-2">
-                        <MapPin className={`h-3.5 w-3.5 ${theme === "gece" ? "text-sini-turquoise" : "text-[#003153]/70"}`} />
-                        <label className={`block text-[10.5px] font-black uppercase tracking-wider ${
-                          theme === "gece" ? "text-slate-200" : "text-[#003153]"
+                    <div className="mb-6">
+                      <div className="mb-2.5 flex items-center gap-2 px-1">
+                        <MapPin className="h-3.5 w-3.5 text-sini-gold" />
+                        <h5 className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                          theme === "gece" ? "text-slate-300" : "text-sini-navy/70"
                         }`}>
                           Atölye Yöresi
-                        </label>
+                        </h5>
                       </div>
-                      <div className="flex flex-col gap-1.5">
+                      <div className="flex flex-col gap-1">
                         {["Tümü", "İznik", "Kütahya"].map((origin) => {
-                          const isSelected = selectedOrigin === origin;
+                          const isSelected = origin !== "Tümü" && selectedOrigin === origin;
                           const matchCount = getOriginCount(origin);
                           return (
                             <motion.button
                               key={origin}
                               type="button"
                               aria-pressed={isSelected}
-                              onClick={() => setSelectedOrigin(origin)}
-                              whileHover={{ x: 3 }}
+                              onClick={() => setSelectedOrigin(isSelected ? "Tümü" : origin)}
+                              whileHover={{ scale: 1.01 }}
                               whileTap={{ scale: 0.98 }}
-                              className={`w-full text-left rounded-xl px-3.5 py-2.5 text-xs transition-all cursor-pointer flex items-center justify-between border ${
+                              className={`group flex min-h-10 w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-all ${
                                 isSelected
                                   ? theme === "gece"
-                                    ? "bg-sini-turquoise/15 text-cyan-100 border-sini-turquoise/50 shadow-sm font-bold pl-4 border-l-4"
-                                    : "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
+                                    ? "bg-sini-gold/[0.13] text-amber-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                                    : "bg-sini-navy text-white shadow-[0_7px_18px_rgba(13,35,58,0.16)]"
                                   : theme === "gece"
-                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-sini-turquoise/15"
-                                    : "bg-sini-navy/[0.02] text-stone-700 hover:bg-sini-navy/5 hover:text-sini-navy border-sini-navy/10"
+                                    ? "text-slate-300 hover:bg-white/[0.055] hover:text-white"
+                                    : "text-stone-600 hover:bg-sini-navy/[0.045] hover:text-sini-navy"
                               }`}
                             >
-                              <div className="flex items-center gap-2">
-                                {isSelected && <span className="text-sini-turquoise font-extrabold text-[10px]">✦</span>}
-                                <span className={isSelected ? "font-black uppercase tracking-wide text-[10.5px]" : "font-semibold"}>
+                              <div className="flex items-center gap-2.5">
+                                <span className={`h-1.5 w-1.5 rounded-full transition-all ${
+                                  isSelected
+                                    ? "bg-sini-gold shadow-[0_0_8px_rgba(207,161,92,0.75)]"
+                                    : "bg-transparent"
+                                }`} />
+                                <span className={isSelected ? "font-bold" : "font-medium"}>
                                   {origin === "Tümü" ? "Tüm Yöreler" : origin}
                                 </span>
                               </div>
-                              <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
-                                isSelected 
-                                  ? "bg-[#00223a] text-sini-turquoise border-sini-turquoise/25"
+                              <span className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tabular-nums ${
+                                isSelected
+                                  ? theme === "gece"
+                                    ? "bg-sini-gold/12 text-amber-200"
+                                    : "bg-white/10 text-amber-100"
                                   : theme === "gece"
-                                    ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
-                                    : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
+                                    ? "bg-black/15 text-slate-400"
+                                    : "bg-sini-navy/5 text-stone-500"
                               }`}>
                                 {matchCount}
                               </span>
@@ -1248,49 +1267,55 @@ export default function App() {
                     </div>
 
                     {/* Technique Selection with Dynamic Match Counters */}
-                    <div className="mb-6">
-                      <div className="flex items-center gap-1.5 mb-2">
-                        <Paintbrush className={`h-3.5 w-3.5 ${theme === "gece" ? "text-sini-turquoise" : "text-[#003153]/70"}`} />
-                        <label className={`block text-[10.5px] font-black uppercase tracking-wider ${
-                          theme === "gece" ? "text-slate-200" : "text-[#003153]"
+                    <div className="mb-1">
+                      <div className="mb-2.5 flex items-center gap-2 px-1">
+                        <Paintbrush className="h-3.5 w-3.5 text-sini-gold" />
+                        <h5 className={`text-[10px] font-bold uppercase tracking-[0.16em] ${
+                          theme === "gece" ? "text-slate-300" : "text-sini-navy/70"
                         }`}>
                           Sırlama Metodu
-                        </label>
+                        </h5>
                       </div>
-                      <div className="flex flex-col gap-1.5">
+                      <div className="flex flex-col gap-1">
                         {["Tümü", "Sır Altı", "Sır Üstü"].map((tech) => {
-                          const isSelected = selectedTechnique === tech;
+                          const isSelected = tech !== "Tümü" && selectedTechnique === tech;
                           const matchCount = getTechniqueCount(tech);
                           return (
                             <motion.button
                               key={tech}
                               type="button"
                               aria-pressed={isSelected}
-                              onClick={() => setSelectedTechnique(tech)}
-                              whileHover={{ x: 3 }}
+                              onClick={() => setSelectedTechnique(isSelected ? "Tümü" : tech)}
+                              whileHover={{ scale: 1.01 }}
                               whileTap={{ scale: 0.98 }}
-                              className={`w-full text-left rounded-xl px-3.5 py-2.5 text-xs transition-all cursor-pointer flex items-center justify-between border ${
+                              className={`group flex min-h-10 w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-all ${
                                 isSelected
                                   ? theme === "gece"
-                                    ? "bg-sini-turquoise/15 text-cyan-100 border-sini-turquoise/50 shadow-sm font-bold pl-4 border-l-4"
-                                    : "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
+                                    ? "bg-sini-gold/[0.13] text-amber-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                                    : "bg-sini-navy text-white shadow-[0_7px_18px_rgba(13,35,58,0.16)]"
                                   : theme === "gece"
-                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-sini-turquoise/15"
-                                    : "bg-sini-navy/[0.02] text-stone-700 hover:bg-sini-navy/5 hover:text-sini-navy border-sini-navy/10"
+                                    ? "text-slate-300 hover:bg-white/[0.055] hover:text-white"
+                                    : "text-stone-600 hover:bg-sini-navy/[0.045] hover:text-sini-navy"
                               }`}
                             >
-                              <div className="flex items-center gap-2">
-                                {isSelected && <span className="text-sini-turquoise font-extrabold text-[10px]">✦</span>}
-                                <span className={isSelected ? "font-black uppercase tracking-wide text-[10.5px]" : "font-semibold"}>
+                              <div className="flex items-center gap-2.5">
+                                <span className={`h-1.5 w-1.5 rounded-full transition-all ${
+                                  isSelected
+                                    ? "bg-sini-gold shadow-[0_0_8px_rgba(207,161,92,0.75)]"
+                                    : "bg-transparent"
+                                }`} />
+                                <span className={isSelected ? "font-bold" : "font-medium"}>
                                   {tech === "Tümü" ? "Tüm Teknikler" : tech}
                                 </span>
                               </div>
-                              <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
-                                isSelected 
-                                  ? "bg-[#00223a] text-sini-turquoise border-sini-turquoise/25"
+                              <span className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tabular-nums ${
+                                isSelected
+                                  ? theme === "gece"
+                                    ? "bg-sini-gold/12 text-amber-200"
+                                    : "bg-white/10 text-amber-100"
                                   : theme === "gece"
-                                    ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
-                                    : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
+                                    ? "bg-black/15 text-slate-400"
+                                    : "bg-sini-navy/5 text-stone-500"
                               }`}>
                                 {matchCount}
                               </span>
@@ -1300,29 +1325,36 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Clear Filters Button - Sleek styling */}
-                    <motion.button
-                      type="button"
-                      disabled={!hasActiveFilters}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        setSelectedCategory("Tümü");
-                        setSelectedOrigin("Tümü");
-                        setSelectedTechnique("Tümü");
-                        setMaxPrice(4000);
-                        setSearchQuery("");
-                        setOnlyInStock(false);
-                        setFiltersOpen(false);
-                      }}
-                      className={`mt-4 w-full rounded-xl border py-3.5 text-center text-[10.5px] font-black uppercase tracking-widest transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 ${
+                    {/* Clear Filters Button */}
+                    <div className="relative mt-5 pt-5">
+                      <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${
                         theme === "gece"
-                          ? "bg-[#112946] border-sini-turquoise/15 text-slate-300 hover:bg-sini-turquoise hover:text-sini-navy hover:border-sini-turquoise"
-                          : "border-sini-navy/15 bg-sini-navy/[0.03] text-stone-600 hover:bg-sini-navy hover:text-white hover:border-sini-navy"
-                      }`}
-                    >
-                      Filtreleri Temizle
-                    </motion.button>
+                          ? "from-transparent via-white/8 to-transparent"
+                          : "from-transparent via-sini-navy/10 to-transparent"
+                      }`} />
+                      <motion.button
+                        type="button"
+                        disabled={!hasActiveFilters}
+                        whileHover={hasActiveFilters ? { scale: 1.01 } : undefined}
+                        whileTap={hasActiveFilters ? { scale: 0.98 } : undefined}
+                        onClick={() => {
+                          setSelectedCategory("Tümü");
+                          setSelectedOrigin("Tümü");
+                          setSelectedTechnique("Tümü");
+                          setMaxPrice(4000);
+                          setSearchQuery("");
+                          setOnlyInStock(false);
+                          setFiltersOpen(false);
+                        }}
+                        className={`w-full cursor-pointer rounded-xl py-3 text-center text-[10px] font-bold uppercase tracking-[0.16em] transition-all disabled:cursor-not-allowed disabled:opacity-35 ${
+                          theme === "gece"
+                            ? "bg-white/[0.055] text-sini-gold hover:bg-sini-gold hover:text-sini-navy"
+                            : "bg-sini-navy/[0.045] text-sini-navy/70 hover:bg-sini-navy hover:text-white"
+                        }`}
+                      >
+                        Filtreleri temizle
+                      </motion.button>
+                    </div>
                   </div>
                   </div>
                 </aside>
