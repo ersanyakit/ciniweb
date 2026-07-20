@@ -1,0 +1,6 @@
+{
+  "name": "TwoTales",
+  "description": "Geleneksel Türk Çini sanatına özel, lüks TwoTales Gündüz ve Gece Koleksiyonu, akıllı AI desen asistanı, güvenli üye portalı, sipariş takibi ve ödeme entegrasyonu sunan lüks e-ticaret platformu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

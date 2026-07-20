@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Google Sans", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-serif: "Google Sans", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "Google Sans Mono", monospace;
+  
+  --color-sini-navy: #0d233a; /* Elegant, deep museum Cobalt Navy */
+  --color-sini-turquoise: #1495b5; /* Traditional Iznik Turquoise/Firuze */
+  --color-sini-red: #b91c1c; /* Raised Iznik Coral/Tomato Red */
+  --color-sini-gold: #cfa15c; /* Refined Ottoman Gold Leaf Accent */
+  --color-sini-cream: #fbf9f4; /* Cozy handcraft eggshell clay cream */
+}
+
+/* Eliminate default browser focus/active outlines and borders on click for all buttons, links, and inputs */
+button,
+a,
+[role="button"],
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+button:focus,
+button:active,
+button:focus-visible,
+a:focus,
+a:focus-visible,
+[role="button"]:focus,
+[role="button"]:focus-visible {
+  outline: none !important;
+  outline-color: transparent !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+}
+
