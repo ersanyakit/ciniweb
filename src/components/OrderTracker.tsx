@@ -1,35 +1,42 @@
 import { useState, FormEvent } from "react";
-import { Search, MapPin, Truck, Calendar, Package, ClipboardCheck, PlayCircle, Loader } from "lucide-react";
+import { ArrowLeft, Calendar, CheckCircle2, ChevronRight, ClipboardCheck, MapPin, Package, PlayCircle, Search, Truck } from "lucide-react";
 import { Order } from "../types";
 import { motion } from "motion/react";
 
 interface OrderTrackerProps {
   orders: Order[];
   onAdvanceOrderStatus: (orderId: string) => void;
-  theme?: string;
+  theme?: "gunduz" | "gece";
 }
 
-export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "light" }: OrderTrackerProps) {
+export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "gunduz" }: OrderTrackerProps) {
   const [searchCode, setSearchCode] = useState("");
-  const [searchedOrder, setSearchedOrder] = useState<Order | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const searchedOrder = selectedOrderId
+    ? orders.find((order) => order.id === selectedOrderId) ?? null
+    : null;
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     setSearchError(null);
-    setSearchedOrder(null);
+    setSelectedOrderId(null);
 
-    if (!searchCode.trim()) {
+    const normalizedCode = searchCode.trim().toLocaleLowerCase("tr-TR");
+
+    if (!normalizedCode) {
       setSearchError("Lütfen bir sipariş takip kodu giriniz.");
       return;
     }
 
     const found = orders.find(
-      (o) => o.trackingCode.toLowerCase() === searchCode.trim().toLowerCase() || o.id === searchCode.trim()
+      (order) =>
+        order.trackingCode.toLocaleLowerCase("tr-TR") === normalizedCode ||
+        order.id.toLocaleLowerCase("tr-TR") === normalizedCode
     );
 
     if (found) {
-      setSearchedOrder(found);
+      setSelectedOrderId(found.id);
     } else {
       setSearchError("Aradığınız takip koduna ait aktif bir sipariş bulunamadı. Örnek: 'TR-101' veya 'TR-102' deneyin.");
     }
@@ -69,19 +76,35 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
   };
 
   const displayOrderDetails = (order: Order) => {
+    const isDelivered = order.status === "Teslim Edildi";
+
     return (
-      <div className={`rounded-2xl border p-6 shadow-md mt-6 ${
-        theme === "gece"
-          ? "bg-[#112946] border-sini-turquoise/20 text-white"
-          : "bg-white/85 border-sini-navy/15 text-stone-800"
-      }`}>
+      <div className="mt-6">
+        <button
+          type="button"
+          onClick={() => setSelectedOrderId(null)}
+          className={`mb-3 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${
+            theme === "gece"
+              ? "border-sini-turquoise/20 bg-[#112946] text-slate-200 hover:border-sini-turquoise/50 hover:text-white"
+              : "border-sini-navy/15 bg-white/80 text-sini-navy hover:border-sini-turquoise/50"
+          }`}
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Sipariş listesine dön
+        </button>
+
+        <div className={`rounded-2xl border p-4 shadow-lg sm:p-6 ${
+          theme === "gece"
+            ? "bg-[#112946] border-sini-turquoise/20 text-white"
+            : "bg-white/85 border-sini-navy/15 text-stone-800"
+        }`}>
         {/* Order Header */}
         <div className={`flex flex-col md:flex-row md:items-center md:justify-between border-b pb-4 gap-2 ${
           theme === "gece" ? "border-sini-turquoise/15" : "border-sini-navy/10"
         }`}>
           <div>
             <span className={`text-[10px] font-bold uppercase tracking-wider ${theme === "gece" ? "text-slate-400" : "text-stone-400"}`}>Takip Numarası</span>
-            <h4 className={`font-mono text-base font-bold flex items-center gap-1.5 ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>
+            <h4 className={`mt-1 flex flex-wrap items-center gap-1.5 font-mono text-base font-bold ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>
               {order.trackingCode}
               <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold ${getStatusColor(order.status)}`}>
                 {order.status}
@@ -99,21 +122,21 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
         {/* Traditional Manufacturing & Delivery Timeline */}
         <div className="my-8">
           <h5 className={`font-serif text-sm font-bold mb-6 flex items-center gap-1.5 ${theme === "gece" ? "text-white" : "text-sini-navy"}`}>
-            <Loader className="h-4 w-4 text-sini-turquoise animate-spin" />
+            <Truck className="h-4 w-4 text-sini-turquoise" />
             Eserin Fırın ve Yolculuk Serüveni
           </h5>
 
           {/* Progress Timeline */}
           <div className="relative">
             {/* Background Line */}
-            <div className={`absolute top-0 bottom-0 left-4 w-0.5 md:left-1/2 md:-ml-0.25 ${theme === "gece" ? "bg-sini-turquoise/15" : "bg-sini-navy/10"}`} />
+            <div className={`absolute top-0 bottom-0 left-[15px] w-0.5 md:left-1/2 md:-ml-0.25 ${theme === "gece" ? "bg-sini-turquoise/15" : "bg-sini-navy/10"}`} />
 
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {order.timeline.map((event, idx) => (
-                <div key={idx} className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div key={event.status} className="relative min-h-14 pl-11 md:grid md:grid-cols-[minmax(0,1fr)_56px_minmax(0,1fr)] md:items-center md:pl-0">
                   {/* Timeline bullet */}
                   <div
-                    className={`absolute left-2.5 md:left-1/2 md:-ml-3.5 flex h-7 w-7 items-center justify-center rounded-full border-2 transition-all z-10 ${
+                    className={`absolute left-0.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 transition-all md:left-1/2 md:-ml-3.5 ${
                       event.completed
                         ? theme === "gece"
                           ? "bg-sini-turquoise border-sini-turquoise text-[#003153]"
@@ -126,38 +149,20 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
                     <span className="text-[10px] font-bold">{idx + 1}</span>
                   </div>
 
-                  {/* Left Block (Displays on desktop left, or aligned on mobile) */}
-                  <div className="ml-10 md:ml-0 md:w-[45%] md:text-right">
-                    {idx % 2 === 0 && (
-                      <div>
-                        <h6 className={`text-xs font-bold ${
-                          event.completed 
-                            ? theme === "gece" ? "text-sini-turquoise" : "text-sini-navy" 
-                            : theme === "gece" ? "text-slate-500" : "text-stone-400"
-                        }`}>
-                          {event.title}
-                        </h6>
-                        <p className={`text-[11px] mt-0.5 leading-normal ${theme === "gece" ? "text-slate-300" : "text-stone-500"}`}>{event.description}</p>
-                        {event.date && <span className={`text-[9px] font-mono block mt-1 ${theme === "gece" ? "text-slate-400" : "text-stone-400"}`}>{event.date}</span>}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right Block (Displays on desktop right, or aligned on mobile) */}
-                  <div className="ml-10 md:ml-0 md:w-[45%] md:text-left">
-                    {idx % 2 !== 0 && (
-                      <div>
-                        <h6 className={`text-xs font-bold ${
-                          event.completed 
-                            ? theme === "gece" ? "text-sini-turquoise" : "text-sini-navy" 
-                            : theme === "gece" ? "text-slate-500" : "text-stone-400"
-                        }`}>
-                          {event.title}
-                        </h6>
-                        <p className={`text-[11px] mt-0.5 leading-normal ${theme === "gece" ? "text-slate-300" : "text-stone-500"}`}>{event.description}</p>
-                        {event.date && <span className={`text-[9px] font-mono block mt-1 ${theme === "gece" ? "text-slate-400" : "text-stone-400"}`}>{event.date}</span>}
-                      </div>
-                    )}
+                  <div className={`md:row-start-1 ${
+                    idx % 2 === 0
+                      ? "md:col-start-1 md:pr-4 md:text-right"
+                      : "md:col-start-3 md:pl-4 md:text-left"
+                  }`}>
+                    <h6 className={`text-xs font-bold ${
+                      event.completed
+                        ? theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"
+                        : theme === "gece" ? "text-slate-500" : "text-stone-400"
+                    }`}>
+                      {event.title}
+                    </h6>
+                    <p className={`mt-1 text-xs leading-relaxed ${theme === "gece" ? "text-slate-300" : "text-stone-600"}`}>{event.description}</p>
+                    {event.date && <span className={`mt-1 block font-mono text-[10px] ${theme === "gece" ? "text-slate-400" : "text-stone-400"}`}>{event.date}</span>}
                   </div>
                 </div>
               ))}
@@ -172,30 +177,35 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
             : "bg-sini-turquoise/5 border-sini-turquoise/30"
         }`}>
           <div className="flex items-start space-x-2.5">
-            <PlayCircle className="h-5 w-5 text-sini-turquoise flex-shrink-0 mt-0.5" />
+            {isDelivered ? (
+              <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-emerald-500 mt-0.5" />
+            ) : (
+              <PlayCircle className="h-5 w-5 text-sini-turquoise flex-shrink-0 mt-0.5" />
+            )}
             <div>
-              <p className={`text-xs font-bold ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>Aşama Simülatörü</p>
+              <p className={`text-xs font-bold ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>
+                {isDelivered ? "Teslimat Tamamlandı" : "Aşama Simülatörü"}
+              </p>
               <p className={`text-[10px] leading-normal ${theme === "gece" ? "text-slate-300" : "text-stone-500"}`}>
-                Siparişinizi fırınlama, sırlama, kargolama adımlarından bir sonrakine atlatarak çini teslimat simülasyonunu test edebilirsiniz.
+                {isDelivered
+                  ? "Eseriniz tüm atölye ve kargo aşamalarını tamamlayarak adresine ulaştı."
+                  : "Siparişinizi fırınlama, sırlama ve kargolama adımlarından bir sonrakine ilerletebilirsiniz."}
               </p>
             </div>
           </div>
           <motion.button
-            onClick={() => {
-              onAdvanceOrderStatus(order.id);
-              // Trigger a local state refresh for searched order
-              const found = orders.find((o) => o.id === order.id);
-              if (found) setSearchedOrder(found);
-            }}
+            type="button"
+            onClick={() => onAdvanceOrderStatus(order.id)}
+            disabled={isDelivered}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all shadow-sm shrink-0 cursor-pointer ${
+            className={`rounded-lg px-3.5 py-2 text-xs font-bold transition-all shadow-sm shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 ${
               theme === "gece"
                 ? "bg-sini-turquoise text-[#003153] hover:bg-sini-turquoise/80 hover:text-white"
                 : "bg-sini-navy text-sini-turquoise hover:bg-sini-navy/90 hover:text-white"
             }`}
           >
-            Aşamayı İlerlet »
+            {isDelivered ? "Süreç Tamamlandı" : "Aşamayı İlerlet »"}
           </motion.button>
         </div>
 
@@ -251,6 +261,7 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
             </div>
           </div>
         </div>
+        </div>
       </div>
     );
   };
@@ -258,10 +269,20 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Search Header Card */}
-      <div className="rounded-2xl border border-sini-turquoise/20 bg-sini-navy p-6 text-white shadow-md mb-8">
-        <h3 className="font-serif text-xl font-bold text-sini-turquoise mb-2">Hızlı Sipariş Takip Paneli</h3>
-        <p className="text-xs text-sini-turquoise/85 mb-5 leading-relaxed">
-          Sipariş verdiğiniz geleneksel çini eserinizin hangi aşamada olduğunu, boyama sıklığını, fırın durumunu ve kargo takip numaralarını anında sorgulayın.
+      <div className="relative mb-8 overflow-hidden rounded-3xl border border-sini-turquoise/35 bg-gradient-to-br from-sini-navy via-[#0b2945] to-[#061523] p-5 text-white shadow-xl sm:p-7">
+        <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-sini-turquoise/10 blur-3xl" />
+        <div className="relative">
+        <div className="mb-2 flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-sini-turquoise/30 bg-sini-turquoise/10">
+            <Truck className="h-4.5 w-4.5 text-sini-turquoise" />
+          </div>
+          <div>
+            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-cyan-200/80">TwoTales Atölyesi</span>
+            <h3 className="font-serif text-xl font-black text-white">Sipariş Takibi</h3>
+          </div>
+        </div>
+        <p className="mb-5 max-w-2xl text-sm leading-relaxed text-slate-200">
+          Çini eserinizin desen, boyama, fırınlama ve kargo yolculuğunu takip kodunuzla anında görüntüleyin.
         </p>
 
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
@@ -271,8 +292,13 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
               type="text"
               placeholder="Takip kodunu yazın (Örn: TR-101)..."
               value={searchCode}
-              onChange={(e) => setSearchCode(e.target.value)}
-              className="w-full rounded-xl border border-sini-turquoise/20 bg-stone-950/40 py-3 pr-4 pl-11 text-sm text-sini-cream placeholder-sini-turquoise/45 outline-none focus:border-sini-turquoise focus:ring-1 focus:ring-sini-turquoise"
+              onChange={(e) => {
+                setSearchCode(e.target.value);
+                if (searchError) setSearchError(null);
+              }}
+              aria-label="Sipariş takip kodu"
+              aria-describedby={searchError ? "tracking-search-error" : undefined}
+              className="w-full rounded-xl border border-white/15 bg-[#041525]/75 py-3 pr-4 pl-11 text-sm text-white placeholder-slate-400 outline-none transition focus:border-sini-turquoise focus:ring-2 focus:ring-sini-turquoise/30"
             />
           </div>
           <motion.button
@@ -286,10 +312,11 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
         </form>
 
         {searchError && (
-          <p className="text-xs text-red-300 font-semibold mt-3 flex items-center gap-1.5">
+          <p id="tracking-search-error" role="alert" className="mt-3 flex items-center gap-1.5 rounded-lg border border-red-300/20 bg-red-950/30 px-3 py-2 text-xs font-semibold text-red-200">
             ⚠️ {searchError}
           </p>
         )}
+        </div>
       </div>
 
       {/* Searched Order display */}
@@ -297,40 +324,52 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
         displayOrderDetails(searchedOrder)
       ) : (
         /* Default List if logged in user has history */
-        orders.length > 0 && (
+        orders.length > 0 ? (
           <div className="space-y-4">
-            <h4 className={`font-serif text-sm font-bold mb-3 ${theme === "gece" ? "text-slate-200" : "text-sini-navy"}`}>Tüm Sipariş Geçmişiniz</h4>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h4 className={`font-serif text-base font-bold ${theme === "gece" ? "text-slate-100" : "text-sini-navy"}`}>Sipariş Geçmişiniz</h4>
+              <span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${
+                theme === "gece"
+                  ? "border-sini-turquoise/20 bg-sini-turquoise/10 text-sini-turquoise"
+                  : "border-sini-navy/10 bg-sini-navy/5 text-sini-navy"
+              }`}>
+                {orders.length} sipariş
+              </span>
+            </div>
             <div className="grid grid-cols-1 gap-4">
               {orders.map((order) => (
-                <motion.div
+                <motion.button
+                   type="button"
                    key={order.id}
-                   onClick={() => setSearchedOrder(order)}
+                   onClick={() => setSelectedOrderId(order.id)}
+                   aria-label={`${order.trackingCode} numaralı siparişi görüntüle`}
                    whileHover={{ scale: 1.015 }}
                    whileTap={{ scale: 0.985 }}
-                   className={`rounded-xl border p-4 shadow-sm cursor-pointer transition-all flex flex-col md:flex-row md:items-center md:justify-between gap-3 ${
+                   className={`grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border p-4 text-left shadow-sm transition-all cursor-pointer ${
                      theme === "gece"
                        ? "border-sini-turquoise/20 bg-[#112946] text-white hover:border-sini-turquoise/60"
                        : "border-sini-navy/15 bg-white/80 text-stone-800 hover:border-sini-turquoise/60"
                    }`}
                 >
-                  <div className="flex items-center space-x-3.5">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg border ${
+                    <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${
                       theme === "gece"
                         ? "bg-[#091727] border-sini-turquoise/15 text-sini-turquoise"
                         : "bg-sini-navy/5 border-sini-navy/10 text-sini-navy"
                     }`}>
                       <ClipboardCheck className="h-5 w-5" />
                     </div>
-                    <div>
-                      <p className={`text-xs font-mono font-bold ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>{order.trackingCode}</p>
-                      <p className={`text-[10px] mt-0.5 ${theme === "gece" ? "text-slate-400" : "text-stone-500"}`}>
-                        {order.items.length} Ürün • {order.date}
+                    <div className="min-w-0">
+                      <p className={`font-mono text-xs font-bold ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>{order.trackingCode}</p>
+                      <p className={`mt-1 truncate text-[11px] ${theme === "gece" ? "text-slate-300" : "text-stone-600"}`}>
+                        {order.items[0]?.product.name ?? "Çini eseri"}
+                      </p>
+                      <p className={`mt-0.5 text-[10px] ${theme === "gece" ? "text-slate-400" : "text-stone-500"}`}>
+                        {order.items.length} ürün • {order.date}
                       </p>
                     </div>
-                  </div>
 
-                  <div className="flex items-center space-x-4 ml-13 md:ml-0">
-                    <div className="text-left md:text-right">
+                    <div className="flex items-center gap-2">
+                    <div className="text-right">
                       <p className={`text-xs font-extrabold ${theme === "gece" ? "text-sini-turquoise" : "text-sini-navy"}`}>
                         ₺{order.total.toLocaleString("tr-TR")}
                       </p>
@@ -338,10 +377,21 @@ export default function OrderTracker({ orders, onAdvanceOrderStatus, theme = "li
                         {order.status}
                       </span>
                     </div>
-                  </div>
-                </motion.div>
+                    <ChevronRight className={`h-4 w-4 ${theme === "gece" ? "text-slate-500" : "text-stone-400"}`} />
+                    </div>
+                </motion.button>
               ))}
             </div>
+          </div>
+        ) : (
+          <div className={`rounded-2xl border border-dashed px-6 py-14 text-center ${
+            theme === "gece"
+              ? "border-sini-turquoise/20 bg-[#112946]/60 text-slate-300"
+              : "border-sini-navy/15 bg-white/60 text-stone-500"
+          }`}>
+            <Package className="mx-auto mb-3 h-8 w-8 text-sini-turquoise" />
+            <p className="text-sm font-bold">Henüz kayıtlı siparişiniz yok</p>
+            <p className="mt-1 text-xs opacity-75">Yeni siparişleriniz burada listelenecek.</p>
           </div>
         )
       )}

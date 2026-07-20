@@ -12,7 +12,7 @@ import {
   Heart, ShoppingCart, Trash2, X, Share2, Eye, ShieldCheck, 
   Sparkles, Instagram, Award, Hourglass, HelpCircle, AlertCircle,
   Filter, SlidersHorizontal, Layers, MapPin, Paintbrush,
-  Star, MessageSquare, Send, ChevronRight, Home, ArrowLeft
+  Star, MessageSquare, Send, ChevronDown, ChevronRight, Home, ArrowLeft
 } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -129,6 +129,7 @@ export default function App() {
   const [selectedTechnique, setSelectedTechnique] = useState<string>("Tümü");
   const [maxPrice, setMaxPrice] = useState<number>(4000);
   const [onlyInStock, setOnlyInStock] = useState<boolean>(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Zoomed Product Detail Modal State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -375,6 +376,15 @@ export default function App() {
     return matchesSearch && matchesCategory && matchesOrigin && matchesTechnique && matchesPrice && matchesStock;
   });
 
+  const activeFilterCount = [
+    selectedCategory !== "Tümü",
+    selectedOrigin !== "Tümü",
+    selectedTechnique !== "Tümü",
+    maxPrice < 4000,
+    onlyInStock,
+  ].filter(Boolean).length;
+  const hasActiveFilters = activeFilterCount > 0;
+
   // Order Placement logic
   const handlePlaceOrder = (shippingAddress: any, cardLast4: string) => {
     const trackingNo = `TR-${Math.floor(100 + Math.random() * 900)}`;
@@ -406,44 +416,46 @@ export default function App() {
 
   // Advance Order Status Timeline Simulator (Traditional Çini Lifecycle)
   const handleAdvanceOrderStatus = (orderId: string) => {
-    const updated = orders.map((order) => {
-      if (order.id !== orderId) return order;
+    setOrders((currentOrders) => {
+      const updated = currentOrders.map((order) => {
+        if (order.id !== orderId) return order;
 
-      const nextStatusMap: Record<Order["status"], { next: Order["status"]; index: number }> = {
-        "Alındı": { next: "Çizimde", index: 1 },
-        "Çizimde": { next: "Boyanıyor", index: 2 },
-        "Boyanıyor": { next: "Fırınlanıyor", index: 3 },
-        "Fırınlanıyor": { next: "Kargoda", index: 4 },
-        "Kargoda": { next: "Teslim Edildi", index: 5 },
-        "Teslim Edildi": { next: "Teslim Edildi", index: 5 }
-      };
+        const nextStatusMap: Record<Order["status"], { next: Order["status"]; index: number }> = {
+          "Alındı": { next: "Çizimde", index: 1 },
+          "Çizimde": { next: "Boyanıyor", index: 2 },
+          "Boyanıyor": { next: "Fırınlanıyor", index: 3 },
+          "Fırınlanıyor": { next: "Kargoda", index: 4 },
+          "Kargoda": { next: "Teslim Edildi", index: 5 },
+          "Teslim Edildi": { next: "Teslim Edildi", index: 5 }
+        };
 
-      const stepInfo = nextStatusMap[order.status];
-      if (!stepInfo) return order;
+        const stepInfo = nextStatusMap[order.status];
+        if (!stepInfo) return order;
 
-      const nextStatus = stepInfo.next;
-      const nextIndex = stepInfo.index;
+        const nextStatus = stepInfo.next;
+        const nextIndex = stepInfo.index;
 
-      const updatedTimeline = order.timeline.map((event, idx) => {
-        if (idx <= nextIndex) {
-          return {
-            ...event,
-            completed: true,
-            date: event.date || `${new Date().toLocaleDateString("tr-TR")} ${new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}`
-          };
-        }
-        return event;
+        const updatedTimeline = order.timeline.map((event, idx) => {
+          if (idx <= nextIndex) {
+            return {
+              ...event,
+              completed: true,
+              date: event.date || `${new Date().toLocaleDateString("tr-TR")} ${new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}`
+            };
+          }
+          return event;
+        });
+
+        return {
+          ...order,
+          status: nextStatus,
+          timeline: updatedTimeline
+        };
       });
 
-      return {
-        ...order,
-        status: nextStatus,
-        timeline: updatedTimeline
-      };
+      localStorage.setItem("cini_orders", JSON.stringify(updated));
+      return updated;
     });
-
-    setOrders(updated);
-    localStorage.setItem("cini_orders", JSON.stringify(updated));
   };
 
   // Social Share Simulator
@@ -995,36 +1007,61 @@ export default function App() {
 
             {/* Catalog Grid with Filters */}
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)]">
                 
                 {/* Sidebar Filter Panel */}
-                <div className="lg:col-span-3">
-                  <div className={`lg:sticky lg:top-24 rounded-2xl border-2 border-double p-5.5 shadow-md relative overflow-hidden transition-all duration-300 ${
-                    theme === "gece" 
-                      ? "border-sini-turquoise/20 bg-[#091727] shadow-slate-900/50" 
-                      : "border-sini-navy/20 bg-[#FCFAF7] shadow-stone-200/30"
-                  }`}>
-                    
-                    {/* Vintage Corner Decors */}
-                    <div className={`absolute top-1.5 left-1.5 w-2 h-2 border-t border-l ${theme === "gece" ? "border-sini-turquoise/30" : "border-sini-navy/20"}`} />
-                    <div className={`absolute top-1.5 right-1.5 w-2 h-2 border-t border-r ${theme === "gece" ? "border-sini-turquoise/30" : "border-sini-navy/20"}`} />
-                    <div className={`absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l ${theme === "gece" ? "border-sini-turquoise/30" : "border-sini-navy/20"}`} />
-                    <div className={`absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r ${theme === "gece" ? "border-sini-turquoise/30" : "border-sini-navy/20"}`} />
+                <aside>
+                  <button
+                    type="button"
+                    onClick={() => setFiltersOpen((open) => !open)}
+                    aria-expanded={filtersOpen}
+                    aria-controls="catalog-filters"
+                    className={`mb-3 flex min-h-12 w-full items-center justify-between rounded-2xl border px-4 py-3 text-left shadow-sm transition lg:hidden ${
+                      theme === "gece"
+                        ? "border-sini-turquoise/25 bg-[#0b1d30] text-slate-100"
+                        : "border-sini-navy/15 bg-white text-sini-navy"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 text-sm font-black">
+                      <Filter className="h-4 w-4 text-sini-turquoise" />
+                      Filtreler
+                      {activeFilterCount > 0 && (
+                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sini-turquoise px-1.5 text-[10px] font-black text-sini-navy">
+                          {activeFilterCount}
+                        </span>
+                      )}
+                    </span>
+                    <ChevronDown className={`h-4 w-4 text-sini-turquoise transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+                  </button>
 
-                    {/* Exquisite Sidebar Header */}
-                    <div className={`flex flex-col pb-3 border-b mb-5 text-center ${theme === "gece" ? "border-slate-800" : "border-sini-navy/10"}`}>
-                      <span className="text-[9px] uppercase tracking-widest text-sini-turquoise font-bold">TwoTales Atölyesi</span>
-                      <h4 className={`font-serif text-sm font-black uppercase tracking-wider flex items-center justify-center gap-1.5 mt-0.5 ${
-                        theme === "gece" ? "text-slate-200" : "text-[#003153]"
+                  <div id="catalog-filters" className={`${filtersOpen ? "block" : "hidden"} lg:block`}>
+                  <div className={`relative rounded-2xl border p-4 shadow-sm transition-all duration-300 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain xl:p-5 ${
+                    theme === "gece"
+                      ? "border-slate-700/70 bg-[#0b1d30] shadow-slate-950/30"
+                      : "border-sini-navy/15 bg-white shadow-stone-200/40"
+                  }`}>
+
+                    {/* Sidebar Header */}
+                    <div className={`mb-5 flex items-center justify-between gap-3 border-b pb-4 ${theme === "gece" ? "border-sini-turquoise/15" : "border-sini-navy/10"}`}>
+                      <div>
+                        <span className={`text-[10px] font-bold uppercase tracking-[0.18em] ${theme === "gece" ? "text-cyan-300" : "text-cyan-700"}`}>TwoTales Atölyesi</span>
+                        <h4 className={`mt-1 flex items-center gap-2 font-serif text-base font-black ${theme === "gece" ? "text-slate-100" : "text-sini-navy"}`}>
+                          <Filter className="h-4 w-4 text-sini-turquoise" />
+                          Koleksiyonu Filtrele
+                        </h4>
+                      </div>
+                      <span className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-black ${
+                        theme === "gece"
+                          ? "border-sini-turquoise/20 bg-sini-turquoise/10 text-cyan-200"
+                          : "border-sini-navy/10 bg-sini-navy/5 text-sini-navy"
                       }`}>
-                        <Filter className="h-3.5 w-3.5 text-sini-turquoise animate-pulse" />
-                        Seçkin Filtreler
-                      </h4>
+                        {filteredProducts.length} eser
+                      </span>
                     </div>
 
                     {/* In-Stock Only Boutique Toggler */}
-                    <div className={`mb-5 flex items-center justify-between p-3 rounded-xl border shadow-xs transition-colors duration-300 ${
-                      theme === "gece" ? "bg-[#112946] border-slate-800" : "bg-white border-stone-200/50"
+                    <div className={`mb-5 flex min-h-12 items-center justify-between rounded-xl border p-3 transition-colors duration-300 ${
+                      theme === "gece" ? "bg-[#112946] border-sini-turquoise/15" : "bg-sini-navy/[0.03] border-sini-navy/10"
                     }`}>
                       <div className="flex items-center gap-1.5">
                         <Sparkles className="h-3.5 w-3.5 text-sini-turquoise" />
@@ -1035,28 +1072,33 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => setOnlyInStock(!onlyInStock)}
-                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                          onlyInStock ? "bg-sini-navy" : "bg-stone-200"
+                        role="switch"
+                        aria-checked={onlyInStock}
+                        aria-label="Yalnızca stokta bulunan eserleri göster"
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                          onlyInStock
+                            ? "bg-sini-turquoise"
+                            : theme === "gece" ? "bg-slate-600" : "bg-stone-300"
                         }`}
                       >
                         <span
-                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                            onlyInStock ? "translate-x-4" : "translate-x-0"
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                            onlyInStock ? "translate-x-5" : "translate-x-0"
                           }`}
                         />
                       </button>
                     </div>
 
                     {/* Price Range with Elegant Serif Numbers */}
-                    <div className={`mb-5 p-3.5 rounded-xl border shadow-xs transition-colors duration-300 ${
-                      theme === "gece" ? "bg-[#112946] border-slate-800" : "bg-white border-stone-200/50"
+                    <div className={`mb-5 rounded-xl border p-3.5 transition-colors duration-300 ${
+                      theme === "gece" ? "bg-[#112946] border-sini-turquoise/15" : "bg-sini-navy/[0.03] border-sini-navy/10"
                     }`}>
                       <div className="flex items-center gap-1.5 mb-2">
                         <SlidersHorizontal className={`h-3.5 w-3.5 ${theme === "gece" ? "text-sini-turquoise" : "text-[#003153]/70"}`} />
-                        <label className={`block text-[10.5px] font-black uppercase tracking-wider ${
+                        <label htmlFor="catalog-max-price" className={`block text-[11px] font-black uppercase tracking-wider ${
                           theme === "gece" ? "text-slate-200" : "text-[#003153]"
                         }`}>
-                          Eser Değer Aralığı
+                          Azami Fiyat
                         </label>
                       </div>
                       <div className="text-[11px] font-bold mb-2.5 flex justify-between items-center">
@@ -1070,14 +1112,16 @@ export default function App() {
                         </span>
                       </div>
                       <input
+                        id="catalog-max-price"
                         type="range"
                         min={400}
                         max={4000}
                         step={100}
                         value={maxPrice}
                         onChange={(e) => setMaxPrice(Number(e.target.value))}
+                        aria-valuetext={`Azami ${maxPrice.toLocaleString("tr-TR")} Türk lirası`}
                         className={`w-full cursor-pointer h-1.5 rounded-lg appearance-none border ${
-                          theme === "gece" ? "accent-sini-turquoise bg-slate-900 border-slate-800" : "accent-[#003153] bg-stone-100 border-stone-200/30"
+                          theme === "gece" ? "accent-sini-turquoise bg-slate-900 border-sini-turquoise/15" : "accent-[#003153] bg-sini-navy/10 border-sini-navy/10"
                         }`}
                       />
                       <div className="flex justify-between text-[9px] text-stone-400 font-bold font-mono mt-1.5">
@@ -1104,15 +1148,18 @@ export default function App() {
                             <motion.button
                               key={cat}
                               type="button"
+                              aria-pressed={isSelected}
                               onClick={() => setSelectedCategory(cat)}
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.98 }}
                               className={`w-full text-left rounded-xl px-3.5 py-2.5 text-xs transition-all cursor-pointer flex items-center justify-between border ${
                                 isSelected
-                                  ? "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
+                                  ? theme === "gece"
+                                    ? "bg-sini-turquoise/15 text-cyan-100 border-sini-turquoise/50 shadow-sm font-bold pl-4 border-l-4"
+                                    : "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
                                   : theme === "gece"
-                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-slate-800"
-                                    : "bg-white text-stone-600 hover:bg-stone-50 hover:text-[#003153] border-stone-200/40"
+                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-sini-turquoise/15"
+                                    : "bg-sini-navy/[0.02] text-stone-700 hover:bg-sini-navy/5 hover:text-sini-navy border-sini-navy/10"
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -1121,12 +1168,12 @@ export default function App() {
                                   {cat === "Tümü" ? "Tüm Kategoriler" : cat}
                                 </span>
                               </div>
-                              <span className={`text-[9.5px] font-mono font-bold px-1.5 py-0.2 rounded-md ${
+                              <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                                 isSelected 
                                   ? "bg-[#00223a] text-sini-turquoise border border-sini-turquoise/25" 
                                   : theme === "gece"
-                                    ? "bg-[#091727] text-slate-400 border border-slate-800"
-                                    : "bg-stone-100 text-stone-400 border border-stone-200/10"
+                                    ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
+                                    : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
                               }`}>
                                 {matchCount}
                               </span>
@@ -1154,15 +1201,18 @@ export default function App() {
                             <motion.button
                               key={origin}
                               type="button"
+                              aria-pressed={isSelected}
                               onClick={() => setSelectedOrigin(origin)}
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.98 }}
                               className={`w-full text-left rounded-xl px-3.5 py-2.5 text-xs transition-all cursor-pointer flex items-center justify-between border ${
                                 isSelected
-                                  ? "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
+                                  ? theme === "gece"
+                                    ? "bg-sini-turquoise/15 text-cyan-100 border-sini-turquoise/50 shadow-sm font-bold pl-4 border-l-4"
+                                    : "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
                                   : theme === "gece"
-                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-slate-800"
-                                    : "bg-white text-stone-600 hover:bg-stone-50 hover:text-[#003153] border-stone-200/40"
+                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-sini-turquoise/15"
+                                    : "bg-sini-navy/[0.02] text-stone-700 hover:bg-sini-navy/5 hover:text-sini-navy border-sini-navy/10"
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -1171,12 +1221,12 @@ export default function App() {
                                   {origin === "Tümü" ? "Tüm Yöreler" : origin}
                                 </span>
                               </div>
-                              <span className={`text-[9.5px] font-mono font-bold px-1.5 py-0.2 rounded-md ${
+                              <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                                 isSelected 
                                   ? "bg-[#00223a] text-sini-turquoise border border-sini-turquoise/25" 
                                   : theme === "gece"
-                                    ? "bg-[#091727] text-slate-400 border border-slate-800"
-                                    : "bg-stone-100 text-stone-400 border border-stone-200/10"
+                                    ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
+                                    : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
                               }`}>
                                 {matchCount}
                               </span>
@@ -1204,15 +1254,18 @@ export default function App() {
                             <motion.button
                               key={tech}
                               type="button"
+                              aria-pressed={isSelected}
                               onClick={() => setSelectedTechnique(tech)}
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.98 }}
                               className={`w-full text-left rounded-xl px-3.5 py-2.5 text-xs transition-all cursor-pointer flex items-center justify-between border ${
                                 isSelected
-                                  ? "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
+                                  ? theme === "gece"
+                                    ? "bg-sini-turquoise/15 text-cyan-100 border-sini-turquoise/50 shadow-sm font-bold pl-4 border-l-4"
+                                    : "bg-sini-navy text-white border-sini-navy shadow-md font-bold pl-4 border-l-4 border-l-sini-turquoise"
                                   : theme === "gece"
-                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-slate-800"
-                                    : "bg-white text-stone-600 hover:bg-stone-50 hover:text-[#003153] border-stone-200/40"
+                                    ? "bg-[#112946]/90 text-slate-300 hover:bg-[#153457] hover:text-white border-sini-turquoise/15"
+                                    : "bg-sini-navy/[0.02] text-stone-700 hover:bg-sini-navy/5 hover:text-sini-navy border-sini-navy/10"
                               }`}
                             >
                               <div className="flex items-center gap-2">
@@ -1221,12 +1274,12 @@ export default function App() {
                                   {tech === "Tümü" ? "Tüm Teknikler" : tech}
                                 </span>
                               </div>
-                              <span className={`text-[9.5px] font-mono font-bold px-1.5 py-0.2 rounded-md ${
+                              <span className={`rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold ${
                                 isSelected 
                                   ? "bg-[#00223a] text-sini-turquoise border border-sini-turquoise/25" 
                                   : theme === "gece"
-                                    ? "bg-[#091727] text-slate-400 border border-slate-800"
-                                    : "bg-stone-100 text-stone-400 border border-stone-200/10"
+                                    ? "bg-[#091727] text-slate-300 border-sini-turquoise/15"
+                                    : "bg-sini-navy/5 text-stone-600 border-sini-navy/10"
                               }`}>
                                 {matchCount}
                               </span>
@@ -1239,6 +1292,7 @@ export default function App() {
                     {/* Clear Filters Button - Sleek styling */}
                     <motion.button
                       type="button"
+                      disabled={!hasActiveFilters}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
@@ -1248,22 +1302,24 @@ export default function App() {
                         setMaxPrice(4000);
                         setSearchQuery("");
                         setOnlyInStock(false);
+                        setFiltersOpen(false);
                       }}
-                      className={`w-full mt-4 rounded-xl py-3.5 text-center text-[10.5px] font-black uppercase tracking-widest transition-all cursor-pointer shadow-xs border ${
+                      className={`mt-4 w-full rounded-xl border py-3.5 text-center text-[10.5px] font-black uppercase tracking-widest transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 ${
                         theme === "gece"
-                          ? "bg-[#112946] border-slate-800 text-slate-300 hover:bg-sini-turquoise hover:text-white hover:border-sini-turquoise"
-                          : "border-stone-350/50 bg-stone-50 hover:bg-sini-navy hover:text-white hover:border-sini-navy text-stone-500"
+                          ? "bg-[#112946] border-sini-turquoise/15 text-slate-300 hover:bg-sini-turquoise hover:text-sini-navy hover:border-sini-turquoise"
+                          : "border-sini-navy/15 bg-sini-navy/[0.03] text-stone-600 hover:bg-sini-navy hover:text-white hover:border-sini-navy"
                       }`}
                     >
                       Filtreleri Temizle
                     </motion.button>
                   </div>
-                </div>
+                  </div>
+                </aside>
 
                 {/* Product List Grid */}
-                <div className="lg:col-span-9">
+                <section className="min-w-0">
                   {filteredProducts.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                       {filteredProducts.map((p) => (
                         <ProductCard
                           key={p.id}
@@ -1287,7 +1343,11 @@ export default function App() {
                   )}
 
                   {/* Traditional Social Media Integration block */}
-                  <div className="mt-16 rounded-2xl border border-[#00b4d8]/30 bg-[#00b4d8]/5 p-6 md:p-8">
+                  <div className={`mt-16 rounded-3xl border p-6 shadow-sm md:p-8 ${
+                    theme === "gece"
+                      ? "border-sini-turquoise/20 bg-[#0b1d30]/80"
+                      : "border-sini-navy/15 bg-white/70"
+                  }`}>
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-3">
                       <div>
                         <h4 className={`font-serif text-lg font-bold flex items-center gap-1.5 ${
@@ -1315,19 +1375,26 @@ export default function App() {
                         { seed: "cini2", tag: "@twotales_art", likes: 184, item: "Firuze Çini Karo" },
                         { seed: "cini3", tag: "@traditional_tiles", likes: 312, item: "Gözyaşı Çini Vazo" },
                         { seed: "cini4", tag: "@iznik_fırın", likes: 145, item: "Haliç Kase" }
-                      ].map((item, idx) => (
-                        <div key={idx} className="group relative overflow-hidden rounded-xl aspect-square bg-stone-100 border border-stone-200">
+                      ].map((item) => (
+                        <div
+                          key={item.seed}
+                          className={`group relative aspect-square overflow-hidden rounded-2xl border-2 shadow-sm ring-1 ring-inset transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
+                            theme === "gece"
+                              ? "border-sini-turquoise/20 bg-[#091727] ring-white/5 hover:border-sini-turquoise/60"
+                              : "border-sini-navy/15 bg-sini-cream ring-sini-navy/5 hover:border-sini-turquoise/70"
+                          }`}
+                        >
                            {/* We'll use simple fallback picsum image placeholders */}
                           <img
                             src={`https://picsum.photos/seed/${item.seed}/400/400`}
-                            alt="Instagram Gallery"
+                            alt={item.item}
                             referrerPolicy="no-referrer"
                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-[#003153]/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100 flex flex-col justify-end p-3 text-white">
+                          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-[#031523]/95 via-[#003153]/45 to-transparent p-3 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                             <p className="text-[10px] font-mono font-bold">{item.tag}</p>
-                            <p className="text-[9px] text-[#00b4d8] truncate mt-0.5">{item.item}</p>
-                            <div className="flex items-center justify-between text-[9px] mt-2 text-[#00b4d8]/85">
+                            <p className="mt-0.5 truncate text-[10px] font-semibold text-cyan-200">{item.item}</p>
+                            <div className="mt-2 flex items-center justify-between text-[10px] text-cyan-100">
                               <span>❤️ {item.likes} Beğeni</span>
                               <button 
                                 onClick={(e) => {
@@ -1344,7 +1411,7 @@ export default function App() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </section>
 
               </div>
             </div>
